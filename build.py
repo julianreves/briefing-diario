@@ -64,66 +64,68 @@ def link(url: str, text: str) -> str:
 
 
 CSS = """
-:root{--bg:#fff;--ink:#111318;--muted:#6a7078;--accent:#d62718;--black:#000;--yellow:#ffde00;--hair:#dcdbd4;--pad:clamp(24px,7.2vw,120px)}
+:root{--bg:#fdf7ed;--ink:#0d0c09;--muted:#6b6458;--gold:#b7954c;--gold-dark:#86672a;--gold-soft:#e9d8ae;--hair:#e3d8c2;--pad:clamp(24px,7.2vw,120px);--display:Didot,"Bodoni 72","Bodoni MT","Times New Roman",serif}
 *{box-sizing:border-box}
 html{overflow-x:clip;-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.45;overflow-x:clip;font-variant-numeric:tabular-nums}
 a{color:inherit}
 a:focus-visible,summary:focus-visible,audio:focus-visible{outline:3px solid var(--ink);outline-offset:4px}
-.black a:focus-visible,.red a:focus-visible,footer a:focus-visible{outline-color:#fff}
+.dark a:focus-visible,footer a:focus-visible{outline-color:var(--bg)}
 h1,h2,h3,p{margin:0}
-.source{font-size:12px;font-weight:500;color:var(--muted)}
+h1,h2,.day,.big,.num,.logo,.when{font-family:var(--display)}
 .bar{position:relative;z-index:3;display:flex;justify-content:space-between;align-items:baseline;font-size:17px}
-.logo{font-weight:700;text-decoration:none;letter-spacing:-.01em}
+.bar .links{margin-left:auto;display:flex;gap:32px}
 .bar a:not(.logo){font-weight:700}
-mark{background:var(--yellow);color:var(--black);padding:0 .08em}
+.logo{font-weight:700;font-size:22px;text-decoration:none;letter-spacing:-.01em}
+mark{background:var(--gold-soft);color:var(--ink);padding:0 .1em}
 audio{display:block;width:100%;max-width:460px}
 
-.hero{position:relative;min-height:clamp(620px,58vw,900px);overflow:hidden;padding:44px var(--pad) 0}
-.big{position:absolute;right:-6vw;bottom:-11vw;font-size:min(52vw,860px);line-height:.78;font-weight:700;letter-spacing:-.08em;color:var(--accent);user-select:none}
-.hero-copy{position:absolute;z-index:3;left:var(--pad);top:clamp(110px,13vw,220px);width:min(44vw,700px);min-width:300px}
-.hero h1{font-size:clamp(38px,4.7vw,78px);line-height:1;letter-spacing:-.035em;font-weight:700;text-wrap:balance}
-.lead{margin-top:clamp(18px,2.2vw,34px);font-size:clamp(18px,1.6vw,24px);line-height:1.4;max-width:560px}
-.latest{margin-top:clamp(28px,3vw,48px)}
+.hero{position:relative;min-height:clamp(640px,58vw,920px);overflow:hidden;padding:44px var(--pad) 0}
+.big{position:absolute;right:-5vw;bottom:-10vw;font-size:min(50vw,820px);line-height:.8;font-weight:700;letter-spacing:-.04em;color:var(--gold);user-select:none}
+.hero-copy{position:absolute;z-index:3;left:var(--pad);top:clamp(90px,9vw,150px);width:min(46vw,720px);min-width:300px}
+.wordmark{display:block;width:min(30vw,420px);min-width:220px;height:auto;margin:0 0 clamp(28px,3vw,48px) -.4em}
+.hero h1{font-size:clamp(28px,3.3vw,54px);line-height:1.08;letter-spacing:-.015em;font-weight:700;text-wrap:balance}
+.lead{margin-top:clamp(16px,1.8vw,26px);font-size:clamp(17px,1.5vw,22px);line-height:1.45;max-width:540px}
+.latest{margin-top:clamp(24px,2.6vw,40px)}
 .latest p{font-size:clamp(16px,1.3vw,20px);margin-bottom:10px}
 .latest a{font-weight:700}
 
-.black{background:var(--black);color:#fff;padding:clamp(80px,11vw,180px) var(--pad) clamp(72px,10vw,160px)}
-.black h2{font-size:clamp(36px,6.2vw,104px);line-height:.98;letter-spacing:-.04em;font-weight:700;max-width:1200px;text-wrap:balance}
+.dark{background:var(--ink);color:var(--bg);padding:clamp(80px,11vw,180px) var(--pad) clamp(72px,10vw,160px)}
+.dark h2{font-size:clamp(34px,5.6vw,92px);line-height:1;letter-spacing:-.025em;font-weight:700;max-width:1200px;text-wrap:balance}
 .facts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,7vw,120px);align-items:end;margin-top:clamp(64px,9vw,150px)}
-.num{font-size:clamp(120px,18vw,290px);line-height:.8;font-weight:700;letter-spacing:-.06em;color:var(--accent)}
+.num{font-size:clamp(120px,18vw,290px);line-height:.8;font-weight:700;letter-spacing:-.04em;color:var(--gold)}
 .num-cap{margin-top:26px;font-size:clamp(17px,1.46vw,22px);max-width:420px}
-.process{font-size:clamp(16px,1.32vw,20px);line-height:1.55;color:#c9ccd1;max-width:460px;justify-self:end}
+.process{font-size:clamp(16px,1.32vw,20px);line-height:1.55;color:#d9d0bf;max-width:460px;justify-self:end}
 .process p+p{margin-top:1em}
 
 .list{padding:clamp(80px,10vw,160px) var(--pad) clamp(72px,9vw,150px)}
-.list h2{font-size:clamp(32px,3.8vw,62px);line-height:1.05;letter-spacing:-.03em;font-weight:700;max-width:860px;text-wrap:balance;margin-bottom:clamp(40px,5vw,80px)}
+.list h2{font-size:clamp(30px,3.6vw,58px);line-height:1.05;letter-spacing:-.02em;font-weight:700;max-width:860px;text-wrap:balance;margin-bottom:clamp(40px,5vw,80px)}
 .ep{display:grid;grid-template-columns:clamp(84px,12vw,200px) minmax(0,1fr) minmax(0,26rem);gap:clamp(16px,3vw,48px);align-items:center;padding:clamp(18px,2vw,32px) 0;border-top:1px solid var(--hair)}
 .ep:last-of-type{border-bottom:1px solid var(--hair)}
-.day{font-size:clamp(56px,8.4vw,140px);line-height:.85;font-weight:700;letter-spacing:-.05em;text-decoration:none;transition:color .15s}
-.ep:hover .day{color:var(--accent)}
-.ep h3{font-size:clamp(18px,1.6vw,24px);line-height:1.2;letter-spacing:-.01em;font-weight:700}
+.day{font-size:clamp(56px,8.4vw,140px);line-height:.85;font-weight:700;letter-spacing:-.03em;transition:color .15s}
+.ep:hover .day{color:var(--gold-dark)}
+.ep h3{font-size:clamp(18px,1.6vw,24px);line-height:1.2;letter-spacing:-.005em;font-weight:700}
 .ep h3 a{text-decoration:none}
 .ep h3 a:hover{text-decoration:underline}
 .ep .teaser{margin-top:6px;color:var(--muted);font-size:clamp(15px,1.2vw,18px)}
 .ep .meta{margin-top:8px;font-size:13px;color:var(--muted)}
 
-.red{position:relative;background:var(--accent);color:#fff;padding:clamp(72px,8vw,130px) var(--pad) 0;overflow:hidden}
-.red .t{font-size:clamp(26px,2.9vw,48px);line-height:1.12;letter-spacing:-.02em;font-weight:700;max-width:760px;text-wrap:balance}
-.red .links{display:flex;flex-wrap:wrap;gap:12px 36px;margin-top:32px;font-size:clamp(17px,1.46vw,22px);font-weight:700;color:var(--black)}
-.when{margin:clamp(40px,6vw,90px) 0 -.5vw -.04em;font-size:clamp(64px,14.6vw,260px);line-height:.8;font-weight:700;letter-spacing:-.07em;white-space:nowrap}
+.gold{position:relative;background:var(--gold);color:var(--ink);padding:clamp(72px,8vw,130px) var(--pad) 0;overflow:hidden}
+.gold .t{font-family:var(--display);font-size:clamp(28px,3.2vw,52px);line-height:1.1;letter-spacing:-.01em;font-weight:700;max-width:760px;text-wrap:balance}
+.gold .links{display:flex;flex-wrap:wrap;gap:12px 36px;margin-top:32px;font-size:clamp(17px,1.46vw,22px);font-weight:700}
+.when{margin:clamp(40px,6vw,90px) 0 -.5vw -.04em;font-size:clamp(64px,14.6vw,260px);line-height:.8;font-weight:700;letter-spacing:-.04em;white-space:nowrap;color:var(--bg)}
 
-footer{background:var(--black);color:#9aa0a8;padding:48px var(--pad) 56px;display:flex;justify-content:space-between;gap:60px;font-size:14px}
+footer{background:var(--ink);color:#a89f8e;padding:48px var(--pad) 56px;display:flex;justify-content:space-between;gap:60px;font-size:14px}
 footer p{max-width:560px}
 
 .ephero{position:relative;overflow:hidden;padding:44px var(--pad) clamp(48px,6vw,96px)}
-.ephero .big{font-size:min(44vw,700px);bottom:-9vw;right:-3vw}
-.ephero h1{position:relative;z-index:2;margin-top:clamp(64px,9vw,150px);font-size:clamp(38px,5.4vw,92px);line-height:1;letter-spacing:-.04em;font-weight:700;max-width:760px;text-wrap:balance}
+.ephero .big{font-size:min(40vw,640px);bottom:-6vw;right:-3vw}
+.ephero h1{position:relative;z-index:2;margin-top:clamp(64px,9vw,150px);font-size:clamp(36px,5vw,84px);line-height:1;letter-spacing:-.025em;font-weight:700;max-width:760px;text-wrap:balance}
 .ephero .sub{position:relative;z-index:2;margin:clamp(18px,2vw,30px) 0 28px;font-size:clamp(17px,1.5vw,22px);max-width:520px}
 .ephero audio{position:relative;z-index:2}
 .body{padding:clamp(24px,4vw,64px) var(--pad) clamp(64px,8vw,130px);max-width:calc(60rem + 2 * var(--pad))}
 .sec{margin-top:clamp(48px,6vw,96px)}
-.sec h2{font-size:clamp(30px,3.4vw,54px);line-height:1;letter-spacing:-.035em;font-weight:700;margin-bottom:clamp(20px,2.4vw,36px)}
+.sec h2{font-size:clamp(30px,3.2vw,52px);line-height:1;letter-spacing:-.02em;font-weight:700;margin-bottom:clamp(20px,2.4vw,36px)}
 .story{margin:0 0 clamp(26px,2.6vw,40px);max-width:46rem}
 .story a.t{display:block;font-size:clamp(19px,1.7vw,25px);line-height:1.25;font-weight:700;letter-spacing:-.01em}
 .story p{margin-top:8px;font-size:clamp(16px,1.25vw,19px);line-height:1.5}
@@ -138,14 +140,18 @@ summary{cursor:pointer;font-weight:700;font-size:clamp(17px,1.46vw,22px)}
 
 @media (max-width:820px){
  .hero{min-height:0;padding-bottom:0}
- .hero-copy{position:relative;left:auto;top:auto;width:auto;min-width:0;padding:12vw 0 0}
- .big{position:relative;display:block;right:auto;bottom:auto;margin:6vw 0 0 6vw;font-size:72vw;line-height:.72;height:52vw}
- .ephero .big{font-size:60vw;height:40vw;margin:6vw 0 0 20vw;position:relative;bottom:auto;right:auto}
+ .hero-copy{position:relative;left:auto;top:auto;width:auto;min-width:0;padding:10vw 0 0}
+ .wordmark{width:62vw;max-width:360px}
+ .big{position:relative;display:block;right:auto;bottom:auto;margin:8vw 0 0 8vw;font-size:70vw;line-height:.72;height:50vw}
+ .ephero .big{font-size:58vw;height:40vw;margin:6vw 0 0 20vw;position:relative;bottom:auto;right:auto}
  .ephero h1{margin-top:8vw}
  .facts{grid-template-columns:1fr}
  .process{justify-self:start}
  .ep{grid-template-columns:76px 1fr;row-gap:12px}
  .ep .listen{grid-column:1 / -1}
+ .logo{font-size:19px;white-space:nowrap}
+ .bar{font-size:15px}
+ .bar .links{gap:20px}
  .nav{flex-direction:column}
  footer{flex-direction:column;gap:20px}
 }
@@ -174,10 +180,11 @@ def page(cfg: dict, title: str, body: str, canonical: str, root: str, desc: str)
 <link rel="canonical" href="{escape(canonical, quote=True)}">
 <link rel="alternate" type="application/rss+xml" title="{escape(cfg['title'], quote=True)}" href="{escape(feed, quote=True)}">
 <link rel="icon" href="{root}icon.png">
+<link rel="apple-touch-icon" href="{root}icon.png">
 <meta property="og:title" content="{escape(title, quote=True)}">
 <meta property="og:description" content="{escape(desc, quote=True)}">
 <meta property="og:image" content="{escape(cfg['site_url'], quote=True)}/cover.png">
-<meta name="theme-color" content="#ffffff">
+<meta name="theme-color" content="#fdf7ed">
 <style>{CSS}</style>
 </head>
 <body>
@@ -204,8 +211,9 @@ def teaser(ep: dict, limit: int = 120) -> str:
     return text
 
 
-def bar(cfg: dict, root: str, right: str) -> str:
-    return f'<div class="bar"><a class="logo" href="{root}">{escape(cfg["title"])}</a>{right}</div>'
+def bar(cfg: dict, root: str, links: str, brand: bool = True) -> str:
+    logo = f'<a class="logo" href="{root}">{escape(cfg["title"])}</a>' if brand else ''
+    return f'<div class="bar">{logo}<div class="links">{links}</div></div>'
 
 
 def footer(cfg: dict, root: str) -> str:
@@ -228,7 +236,7 @@ def build_index(cfg: dict, eps: list[dict], root: str) -> str:
     apple = 'podcast://' + cfg['site_url'].split('://', 1)[-1] + '/feed.xml'
     mins = avg_minutes(eps)
     latest = eps[0] if eps else None
-    big = str(latest['_date'].day) if latest else '8:00'
+    big = str(latest['_date'].day) if latest else '8'
     if latest:
         latest_html = (f'<div class="latest"><p>Último episodio: <a href="{root}episodios/{latest["id"]}/">'
                        f'{escape(long_date(latest))}</a></p>{player(latest)}</div>')
@@ -244,17 +252,19 @@ def build_index(cfg: dict, eps: list[dict], root: str) -> str:
                  'qué significa cada noticia.</p><p>Todo el proceso es automático y puede equivocarse, así que cada '
                  'episodio enlaza sus fuentes originales y publica el guion completo.</p></div></div>')
     rows = '\n'.join(episode_row(ep, root) for ep in eps) or '<p>Todavía no hay episodios.</p>'
+    links = '<a href="#episodios">Episodios</a><a href="#suscribirse">Suscribirse</a>'
     body = f"""<section class="hero">
-{bar(cfg, root, '<a href="#suscribirse">Suscribirse</a>')}
+{bar(cfg, root, links, brand=False)}
 <div class="big" aria-hidden="true">{big}</div>
 <div class="hero-copy">
+<img class="wordmark" src="{root}wordmark.png" width="2537" height="1269" alt="{escape(cfg['title'], quote=True)}">
 <h1>Cada mañana tienes las noticias del día en unos {mins} minutos de audio.</h1>
 <p class="lead">{escape(cfg['description'])}</p>
 {latest_html}
 </div>
 </section>
 
-<section class="black">
+<section class="dark">
 <h2>Un sistema automático <mark>lee los medios por ti</mark> desde las 8:00, hora de Madrid, y prepara el episodio del día.</h2>
 {facts}
 </section>
@@ -264,7 +274,7 @@ def build_index(cfg: dict, eps: list[dict], root: str) -> str:
 {rows}
 </section>
 
-<section class="red" id="suscribirse">
+<section class="gold" id="suscribirse">
 <p class="t">Suscríbete y cada episodio llega solo a tu app de podcasts.</p>
 <p class="links"><a href="{escape(apple, quote=True)}">Apple Podcasts</a><a href="{feed}">Feed RSS para cualquier app</a></p>
 <p class="when" aria-hidden="true">Todos los días</p>
@@ -393,7 +403,7 @@ def main() -> int:
         older = eps[i + 1] if i + 1 < len(eps) else None
         (folder / 'index.html').write_text(build_episode(cfg, ep, '../../', newer, older), encoding='utf-8')
     (out / 'feed.xml').write_text(build_feed(cfg, eps), encoding='utf-8')
-    for name in ('cover.png', 'icon.png'):
+    for name in ('cover.png', 'icon.png', 'wordmark.png'):
         src = ROOT / 'assets' / name
         if src.exists():
             shutil.copy(src, out / name)
