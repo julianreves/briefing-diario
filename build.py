@@ -23,41 +23,6 @@ MONTHS = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agost
 SECTIONS = [('mexico', 'México'), ('espana', 'España'), ('ia', 'Inteligencia artificial'),
             ('mundo', 'Mundo y geopolítica'), ('negocios', 'Economía y negocios')]
 
-CSS = """
-:root{--bg:#fff;--fg:#111;--muted:#666;--accent:#0b57d0}
-@media (prefers-color-scheme:dark){:root{--bg:#0e0e0e;--fg:#f2f2f2;--muted:#a0a0a0;--accent:#8ab4ff}}
-*{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--fg);font:18px/1.6 Arial,Helvetica,sans-serif}
-main{max-width:38rem;margin:0 auto;padding:2.5rem 1rem 5rem}
-a{color:var(--accent);text-underline-offset:.18em}
-a:hover{text-decoration-thickness:2px}
-.brand{font-weight:700;font-size:1rem;margin:0 0 3rem;letter-spacing:.01em}
-.brand a{color:var(--fg);text-decoration:none}
-h1{font-size:2.1rem;line-height:1.15;margin:0 0 1.5rem;letter-spacing:-.02em}
-h2{font-size:1.2rem;line-height:1.35;margin:0 0 .3rem}
-h2 a{color:var(--fg);text-decoration:none}
-h2 a:hover{text-decoration:underline}
-h3{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:3rem 0 1rem}
-p{margin:0 0 1rem}
-.muted{color:var(--muted);font-size:.9rem}
-.subscribe{margin:2rem 0 0;display:flex;flex-wrap:wrap;gap:.5rem 1.5rem}
-.ep{margin:0 0 2.5rem}
-.ep .teaser{color:var(--muted);margin:0 0 .5rem}
-.ep .meta{margin:.4rem 0 0}
-audio{width:100%;display:block;margin:.6rem 0 0}
-.story{margin:0 0 1.75rem}
-.story strong{display:block;font-weight:700;line-height:1.4;margin-bottom:.25rem}
-details{margin-top:3rem}
-summary{cursor:pointer;color:var(--accent)}
-.script{white-space:pre-wrap;color:var(--muted);font-size:.95rem;margin-top:1rem}
-.nav{display:flex;justify-content:space-between;gap:1rem;margin-top:3.5rem}
-footer{margin-top:4rem}
-a:focus-visible,summary:focus-visible,audio:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
-@media (max-width:30rem){body{font-size:17px}h1{font-size:1.75rem}}
-"""
-
-
 def load_config() -> dict:
     cfg = json.loads((ROOT / 'config.json').read_text(encoding='utf-8'))
     site = os.environ.get('SITE_URL') or cfg.get('site_url') or ''
@@ -98,9 +63,103 @@ def link(url: str, text: str) -> str:
     return f'<a href="{escape(safe_url(url), quote=True)}" rel="noopener">{escape(text)}</a>'
 
 
+CSS = """
+:root{--bg:#fff;--ink:#111318;--muted:#6a7078;--accent:#d62718;--black:#000;--yellow:#ffde00;--hair:#dcdbd4;--pad:clamp(24px,7.2vw,120px)}
+*{box-sizing:border-box}
+html{overflow-x:clip;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif;line-height:1.45;overflow-x:clip;font-variant-numeric:tabular-nums}
+a{color:inherit}
+a:focus-visible,summary:focus-visible,audio:focus-visible{outline:3px solid var(--ink);outline-offset:4px}
+.black a:focus-visible,.red a:focus-visible,footer a:focus-visible{outline-color:#fff}
+h1,h2,h3,p{margin:0}
+.source{font-size:12px;font-weight:500;color:var(--muted)}
+.bar{position:relative;z-index:3;display:flex;justify-content:space-between;align-items:baseline;font-size:17px}
+.logo{font-weight:700;text-decoration:none;letter-spacing:-.01em}
+.bar a:not(.logo){font-weight:700}
+mark{background:var(--yellow);color:var(--black);padding:0 .08em}
+audio{display:block;width:100%;max-width:460px}
+
+.hero{position:relative;min-height:clamp(620px,58vw,900px);overflow:hidden;padding:44px var(--pad) 0}
+.big{position:absolute;right:-6vw;bottom:-11vw;font-size:min(52vw,860px);line-height:.78;font-weight:700;letter-spacing:-.08em;color:var(--accent);user-select:none}
+.hero-copy{position:absolute;z-index:3;left:var(--pad);top:clamp(110px,13vw,220px);width:min(44vw,700px);min-width:300px}
+.hero h1{font-size:clamp(38px,4.7vw,78px);line-height:1;letter-spacing:-.035em;font-weight:700;text-wrap:balance}
+.lead{margin-top:clamp(18px,2.2vw,34px);font-size:clamp(18px,1.6vw,24px);line-height:1.4;max-width:560px}
+.latest{margin-top:clamp(28px,3vw,48px)}
+.latest p{font-size:clamp(16px,1.3vw,20px);margin-bottom:10px}
+.latest a{font-weight:700}
+
+.black{background:var(--black);color:#fff;padding:clamp(80px,11vw,180px) var(--pad) clamp(72px,10vw,160px)}
+.black h2{font-size:clamp(36px,6.2vw,104px);line-height:.98;letter-spacing:-.04em;font-weight:700;max-width:1200px;text-wrap:balance}
+.facts{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,7vw,120px);align-items:end;margin-top:clamp(64px,9vw,150px)}
+.num{font-size:clamp(120px,18vw,290px);line-height:.8;font-weight:700;letter-spacing:-.06em;color:var(--accent)}
+.num-cap{margin-top:26px;font-size:clamp(17px,1.46vw,22px);max-width:420px}
+.process{font-size:clamp(16px,1.32vw,20px);line-height:1.55;color:#c9ccd1;max-width:460px;justify-self:end}
+.process p+p{margin-top:1em}
+
+.list{padding:clamp(80px,10vw,160px) var(--pad) clamp(72px,9vw,150px)}
+.list h2{font-size:clamp(32px,3.8vw,62px);line-height:1.05;letter-spacing:-.03em;font-weight:700;max-width:860px;text-wrap:balance;margin-bottom:clamp(40px,5vw,80px)}
+.ep{display:grid;grid-template-columns:clamp(84px,12vw,200px) minmax(0,1fr) minmax(0,26rem);gap:clamp(16px,3vw,48px);align-items:center;padding:clamp(18px,2vw,32px) 0;border-top:1px solid var(--hair)}
+.ep:last-of-type{border-bottom:1px solid var(--hair)}
+.day{font-size:clamp(56px,8.4vw,140px);line-height:.85;font-weight:700;letter-spacing:-.05em;text-decoration:none;transition:color .15s}
+.ep:hover .day{color:var(--accent)}
+.ep h3{font-size:clamp(18px,1.6vw,24px);line-height:1.2;letter-spacing:-.01em;font-weight:700}
+.ep h3 a{text-decoration:none}
+.ep h3 a:hover{text-decoration:underline}
+.ep .teaser{margin-top:6px;color:var(--muted);font-size:clamp(15px,1.2vw,18px)}
+.ep .meta{margin-top:8px;font-size:13px;color:var(--muted)}
+
+.red{position:relative;background:var(--accent);color:#fff;padding:clamp(72px,8vw,130px) var(--pad) 0;overflow:hidden}
+.red .t{font-size:clamp(26px,2.9vw,48px);line-height:1.12;letter-spacing:-.02em;font-weight:700;max-width:760px;text-wrap:balance}
+.red .links{display:flex;flex-wrap:wrap;gap:12px 36px;margin-top:32px;font-size:clamp(17px,1.46vw,22px);font-weight:700;color:var(--black)}
+.when{margin:clamp(40px,6vw,90px) 0 -.5vw -.04em;font-size:clamp(64px,14.6vw,260px);line-height:.8;font-weight:700;letter-spacing:-.07em;white-space:nowrap}
+
+footer{background:var(--black);color:#9aa0a8;padding:48px var(--pad) 56px;display:flex;justify-content:space-between;gap:60px;font-size:14px}
+footer p{max-width:560px}
+
+.ephero{position:relative;overflow:hidden;padding:44px var(--pad) clamp(48px,6vw,96px)}
+.ephero .big{font-size:min(44vw,700px);bottom:-9vw;right:-3vw}
+.ephero h1{position:relative;z-index:2;margin-top:clamp(64px,9vw,150px);font-size:clamp(38px,5.4vw,92px);line-height:1;letter-spacing:-.04em;font-weight:700;max-width:760px;text-wrap:balance}
+.ephero .sub{position:relative;z-index:2;margin:clamp(18px,2vw,30px) 0 28px;font-size:clamp(17px,1.5vw,22px);max-width:520px}
+.ephero audio{position:relative;z-index:2}
+.body{padding:clamp(24px,4vw,64px) var(--pad) clamp(64px,8vw,130px);max-width:calc(60rem + 2 * var(--pad))}
+.sec{margin-top:clamp(48px,6vw,96px)}
+.sec h2{font-size:clamp(30px,3.4vw,54px);line-height:1;letter-spacing:-.035em;font-weight:700;margin-bottom:clamp(20px,2.4vw,36px)}
+.story{margin:0 0 clamp(26px,2.6vw,40px);max-width:46rem}
+.story a.t{display:block;font-size:clamp(19px,1.7vw,25px);line-height:1.25;font-weight:700;letter-spacing:-.01em}
+.story p{margin-top:8px;font-size:clamp(16px,1.25vw,19px);line-height:1.5}
+.story .more{color:var(--muted);font-size:14px}
+details{margin-top:clamp(56px,7vw,110px);max-width:46rem}
+summary{cursor:pointer;font-weight:700;font-size:clamp(17px,1.46vw,22px)}
+.script{white-space:pre-wrap;color:var(--muted);font-size:16px;line-height:1.6;margin-top:1.2rem}
+.nav{display:flex;justify-content:space-between;gap:32px;margin-top:clamp(56px,7vw,110px);font-size:clamp(18px,1.7vw,26px);font-weight:700;letter-spacing:-.01em}
+.nav span{display:block;font-size:13px;font-weight:400;color:var(--muted);letter-spacing:0;margin-bottom:4px}
+.nav a{text-decoration:none}
+.nav a:hover strong{text-decoration:underline}
+
+@media (max-width:820px){
+ .hero{min-height:0;padding-bottom:0}
+ .hero-copy{position:relative;left:auto;top:auto;width:auto;min-width:0;padding:12vw 0 0}
+ .big{position:relative;display:block;right:auto;bottom:auto;margin:6vw 0 0 6vw;font-size:72vw;line-height:.72;height:52vw}
+ .ephero .big{font-size:60vw;height:40vw;margin:6vw 0 0 20vw;position:relative;bottom:auto;right:auto}
+ .ephero h1{margin-top:8vw}
+ .facts{grid-template-columns:1fr}
+ .process{justify-self:start}
+ .ep{grid-template-columns:76px 1fr;row-gap:12px}
+ .ep .listen{grid-column:1 / -1}
+ .nav{flex-direction:column}
+ footer{flex-direction:column;gap:20px}
+}
+"""
+
+
 def short_date(ep: dict) -> str:
     d = ep['_date']
     return f"{DAYS[d.weekday()].capitalize()} {d.day} de {MONTHS[d.month - 1]}"
+
+
+def avg_minutes(eps: list[dict]) -> int:
+    secs = [e['audio']['seconds'] for e in eps[:7] if (e.get('audio') or {}).get('seconds')]
+    return round(sum(secs) / len(secs) / 60) if secs else 18
 
 
 def page(cfg: dict, title: str, body: str, canonical: str, root: str, desc: str) -> str:
@@ -118,14 +177,11 @@ def page(cfg: dict, title: str, body: str, canonical: str, root: str, desc: str)
 <meta property="og:title" content="{escape(title, quote=True)}">
 <meta property="og:description" content="{escape(desc, quote=True)}">
 <meta property="og:image" content="{escape(cfg['site_url'], quote=True)}/cover.png">
-<meta name="theme-color" content="#0e0e0e">
+<meta name="theme-color" content="#ffffff">
 <style>{CSS}</style>
 </head>
 <body>
-<main>
-<p class="brand"><a href="{root}">{escape(cfg['title'])}</a></p>
 {body}
-</main>
 </body>
 </html>
 """
@@ -148,66 +204,112 @@ def teaser(ep: dict, limit: int = 120) -> str:
     return text
 
 
+def bar(cfg: dict, root: str, right: str) -> str:
+    return f'<div class="bar"><a class="logo" href="{root}">{escape(cfg["title"])}</a>{right}</div>'
+
+
+def footer(cfg: dict, root: str) -> str:
+    return (f'<footer><p>{escape(cfg["disclaimer"])}</p>'
+            f'<p><a href="{root}feed.xml">Feed RSS</a></p></footer>')
+
+
 def episode_row(ep: dict, root: str) -> str:
     url = f"{root}episodios/{ep['id']}/"
+    d = ep['_date']
     meta = ', '.join(x for x in [minutes(ep), f"{len(ep.get('stories') or [])} noticias"] if x)
-    return (f'<article class="ep"><h2><a href="{url}">{escape(short_date(ep))}</a></h2>'
-            f'<p class="teaser">{escape(teaser(ep))}</p>{player(ep)}'
-            f'<p class="muted meta">{escape(meta)}</p></article>')
+    return (f'<article class="ep"><div class="day" aria-hidden="true">{d.day}</div>'
+            f'<div><h3><a href="{url}">{escape(long_date(ep).capitalize())}</a></h3>'
+            f'<p class="teaser">{escape(teaser(ep))}</p></div>'
+            f'<div class="listen">{player(ep)}<p class="meta">{escape(meta)}</p></div></article>')
 
 
 def build_index(cfg: dict, eps: list[dict], root: str) -> str:
     feed = f'{root}feed.xml'
     apple = 'podcast://' + cfg['site_url'].split('://', 1)[-1] + '/feed.xml'
-    parts = [
-        '<h1>Las noticias que importan, cada mañana en unos 18 minutos de audio.</h1>',
-        '<p>Cada día a las 8:00 (hora de Madrid) un sistema automático revisa los medios de México, España y el '
-        'mundo, elige las noticias más relevantes y las analiza. Una voz sintética narra el resultado: México, '
-        'España, inteligencia artificial, mundo y negocios, con el análisis de qué significa cada noticia.</p>',
-        '<p>Cada episodio tiene su propia página con las fuentes originales y el guion completo.</p>',
-        f'<p class="subscribe"><a href="{escape(apple, quote=True)}">Suscribirse en Apple Podcasts</a>'
-        f'<a href="{feed}">Feed RSS para cualquier app</a></p>',
-        '<h3>Episodios</h3>',
-    ]
-    if not eps:
-        parts.append('<p class="muted">El primer episodio llega mañana a las 8:00, hora de Madrid.</p>')
-    current = None
-    for ep in eps:
-        label = month_label(ep)
-        if label != current:
-            if current is not None:
-                parts.append(f'<h3>{escape(label)}</h3>')
-            current = label
-        parts.append(episode_row(ep, root))
-    parts.append(f'<footer class="muted">{escape(cfg["disclaimer"])}</footer>')
-    return page(cfg, cfg['title'], '\n'.join(parts), f'{cfg["site_url"]}/', root, cfg['description'])
+    mins = avg_minutes(eps)
+    latest = eps[0] if eps else None
+    big = str(latest['_date'].day) if latest else '8:00'
+    if latest:
+        latest_html = (f'<div class="latest"><p>Último episodio: <a href="{root}episodios/{latest["id"]}/">'
+                       f'{escape(long_date(latest))}</a></p>{player(latest)}</div>')
+    else:
+        latest_html = '<div class="latest"><p>El primer episodio llega pronto.</p></div>'
+    count = len(latest.get('stories') or []) if latest else 0
+    facts = ''
+    if latest and count:
+        facts = (f'<div class="facts"><div><p class="num">{count}</p>'
+                 f'<p class="num-cap">Son las noticias que entraron al episodio del {escape(long_date(latest))}.</p></div>'
+                 '<div class="process"><p>El sistema revisa los titulares de medios de México, España y el mundo, elige '
+                 'las noticias más relevantes y las analiza. Una voz sintética narra el resultado, con el análisis de '
+                 'qué significa cada noticia.</p><p>Todo el proceso es automático y puede equivocarse, así que cada '
+                 'episodio enlaza sus fuentes originales y publica el guion completo.</p></div></div>')
+    rows = '\n'.join(episode_row(ep, root) for ep in eps) or '<p>Todavía no hay episodios.</p>'
+    body = f"""<section class="hero">
+{bar(cfg, root, '<a href="#suscribirse">Suscribirse</a>')}
+<div class="big" aria-hidden="true">{big}</div>
+<div class="hero-copy">
+<h1>Cada mañana tienes las noticias del día en unos {mins} minutos de audio.</h1>
+<p class="lead">{escape(cfg['description'])}</p>
+{latest_html}
+</div>
+</section>
+
+<section class="black">
+<h2>Un sistema automático <mark>lee los medios por ti</mark> desde las 8:00, hora de Madrid, y prepara el episodio del día.</h2>
+{facts}
+</section>
+
+<section class="list" id="episodios">
+<h2>Todos los episodios están aquí, del más reciente al más antiguo.</h2>
+{rows}
+</section>
+
+<section class="red" id="suscribirse">
+<p class="t">Suscríbete y cada episodio llega solo a tu app de podcasts.</p>
+<p class="links"><a href="{escape(apple, quote=True)}">Apple Podcasts</a><a href="{feed}">Feed RSS para cualquier app</a></p>
+<p class="when" aria-hidden="true">Todos los días</p>
+</section>
+{footer(cfg, root)}"""
+    return page(cfg, f"{cfg['title']}: {cfg['description']}", body, f'{cfg["site_url"]}/', root, cfg['description'])
 
 
 def build_episode(cfg: dict, ep: dict, root: str, newer: dict | None, older: dict | None) -> str:
-    title = f"{short_date(ep)} de {ep['_date'].year}, {cfg['title']}"
+    title = f"{long_date(ep).capitalize()}, {cfg['title']}"
     stories = ep.get('stories') or []
-    parts = [f'<h1>{escape(long_date(ep).capitalize())}</h1>']
-    if minutes(ep):
-        parts.append(f'<p class="muted">Dura {escape(minutes(ep))} y cubre {len(stories)} noticias.</p>')
-    parts.append(player(ep))
+    sub = f'Dura {minutes(ep)} y cubre {len(stories)} noticias.' if minutes(ep) else ''
+    secs = []
     for key, label in SECTIONS:
         group = [s for s in stories if s.get('section') == key]
         if not group:
             continue
-        parts.append(f'<h3>{escape(label)}</h3>')
+        items = []
         for s in group:
             extra = ''.join(f' {link(x["url"], x.get("source") or x["title"])}' for x in s.get('sources') or [])
-            parts.append(f'<div class="story"><strong>{link(s["url"], s["title"])}</strong>'
-                         f'<span>{escape(s.get("so_what") or "")}</span>'
-                         + (f'<br><span class="muted">Más fuentes:{extra}</span>' if extra else '') + '</div>')
-    if ep.get('script'):
-        parts.append(f'<details><summary>Leer el guion completo</summary><div class="script">{escape(ep["script"])}</div></details>')
+            items.append(f'<div class="story"><a class="t" href="{escape(safe_url(s["url"]), quote=True)}" rel="noopener">'
+                         f'{escape(s["title"])}</a><p>{escape(s.get("so_what") or "")}</p>'
+                         + (f'<p class="more">Más fuentes:{extra}</p>' if extra else '') + '</div>')
+        secs.append(f'<div class="sec"><h2>{escape(label)}</h2>{"".join(items)}</div>')
+    script = (f'<details><summary>Leer el guion completo</summary><div class="script">{escape(ep["script"])}</div></details>'
+              if ep.get('script') else '')
     nav = ''
-    nav += f'<a href="{root}episodios/{older["id"]}/">&larr; {escape(short_date(older))}</a>' if older else '<span></span>'
-    nav += f'<a href="{root}episodios/{newer["id"]}/">{escape(short_date(newer))} &rarr;</a>' if newer else '<span></span>'
-    parts.append(f'<nav class="nav">{nav}</nav>')
-    parts.append(f'<footer class="muted">{escape(cfg["disclaimer"])}</footer>')
-    return page(cfg, title, '\n'.join(parts), f'{cfg["site_url"]}/episodios/{ep["id"]}/', root, teaser(ep) or cfg['description'])
+    nav += (f'<a href="{root}episodios/{older["id"]}/"><span>Episodio anterior</span><strong>{escape(short_date(older))}</strong></a>'
+            if older else '<i></i>')
+    nav += (f'<a href="{root}episodios/{newer["id"]}/"><span>Episodio siguiente</span><strong>{escape(short_date(newer))}</strong></a>'
+            if newer else '<i></i>')
+    body = f"""<section class="ephero">
+{bar(cfg, root, f'<a href="{root}#episodios">Todos los episodios</a>')}
+<div class="big" aria-hidden="true">{ep['_date'].day}</div>
+<h1>{escape(long_date(ep).capitalize())}</h1>
+<p class="sub">{escape(sub)}</p>
+{player(ep)}
+</section>
+<div class="body">
+{''.join(secs)}
+{script}
+<nav class="nav">{nav}</nav>
+</div>
+{footer(cfg, root)}"""
+    return page(cfg, title, body, f'{cfg["site_url"]}/episodios/{ep["id"]}/', root, teaser(ep) or cfg['description'])
 
 
 def item_html(ep: dict, page_url: str) -> str:
@@ -255,7 +357,7 @@ def build_feed(cfg: dict, eps: list[dict]) -> str:
     <title>{escape(cfg['title'])}</title>
     <link>{escape(site)}/</link>
     <atom:link href="{escape(site)}/feed.xml" rel="self" type="application/rss+xml"/>
-    <description>{escape(cfg['description'])}</description>
+    <description>{escape(cfg.get('feed_description') or cfg['description'])}</description>
     <language>{escape(cfg['language'])}</language>
     <lastBuildDate>{last}</lastBuildDate>
     <itunes:author>{escape(cfg['author'])}</itunes:author>

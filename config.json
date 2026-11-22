@@ -1,8 +1,9 @@
 {
-  "title": "Briefing Diario",
-  "description": "Cada mañana, las noticias que importan de México, España, inteligencia artificial, mundo y negocios, con el análisis de qué significan.",
+  "title": "El Briefing Diario",
+  "description": "Noticias de México, España, IA, Mundo, Geopolítica y Negocios, todos los días.",
+  "feed_description": "Noticias de México, España, IA, Mundo, Geopolítica y Negocios, todos los días. Cada mañana, un episodio con las noticias más relevantes y el análisis de qué significa cada una.",
   "language": "es-mx",
-  "author": "Briefing Diario",
+  "author": "El Briefing Diario",
   "owner_email": "julian@revorio.es",
   "category": "News",
   "subcategory": "Daily News",

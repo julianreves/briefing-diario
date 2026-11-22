@@ -1,4 +1,4 @@
-# Briefing Diario, web and RSS
+# El Briefing Diario, web and RSS
 
 Static site and podcast feed, hosted free on GitHub. This folder is meant to be its own PUBLIC repo (free GitHub Pages needs a public repo). It holds only generated text, links and the cover. No keys, no n8n exports.
 
