@@ -7,6 +7,7 @@ Only the Python standard library is used.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import shutil
@@ -27,6 +28,9 @@ def load_config() -> dict:
     cfg = json.loads((ROOT / 'config.json').read_text(encoding='utf-8'))
     site = os.environ.get('SITE_URL') or cfg.get('site_url') or ''
     cfg['site_url'] = site.rstrip('/')
+    # Podcast apps cache artwork by URL. A name that changes with the image forces them to fetch the new one.
+    cover = ROOT / 'assets' / 'cover.png'
+    cfg['cover_file'] = f"cover-{hashlib.sha256(cover.read_bytes()).hexdigest()[:8]}.png" if cover.exists() else 'cover.png'
     return cfg
 
 
@@ -183,7 +187,7 @@ def page(cfg: dict, title: str, body: str, canonical: str, root: str, desc: str)
 <link rel="apple-touch-icon" href="{root}icon.png">
 <meta property="og:title" content="{escape(title, quote=True)}">
 <meta property="og:description" content="{escape(desc, quote=True)}">
-<meta property="og:image" content="{escape(cfg['site_url'], quote=True)}/cover.png">
+<meta property="og:image" content="{escape(cfg['site_url'], quote=True)}/{cfg['cover_file']}">
 <meta name="theme-color" content="#fdf7ed">
 <style>{CSS}</style>
 </head>
@@ -371,7 +375,8 @@ def build_feed(cfg: dict, eps: list[dict]) -> str:
     <language>{escape(cfg['language'])}</language>
     <lastBuildDate>{last}</lastBuildDate>
     <itunes:author>{escape(cfg['author'])}</itunes:author>
-    <itunes:image href="{escape(site)}/cover.png"/>
+    <image><url>{escape(site)}/{cfg['cover_file']}</url><title>{escape(cfg['title'])}</title><link>{escape(site)}/</link></image>
+    <itunes:image href="{escape(site)}/{cfg['cover_file']}"/>
     <itunes:explicit>{'true' if cfg.get('explicit') else 'false'}</itunes:explicit>
     <itunes:type>episodic</itunes:type>
     {owner}
@@ -403,6 +408,7 @@ def main() -> int:
         older = eps[i + 1] if i + 1 < len(eps) else None
         (folder / 'index.html').write_text(build_episode(cfg, ep, '../../', newer, older), encoding='utf-8')
     (out / 'feed.xml').write_text(build_feed(cfg, eps), encoding='utf-8')
+    shutil.copy(ROOT / 'assets' / 'cover.png', out / cfg['cover_file'])
     for name in ('cover.png', 'icon.png', 'wordmark.png'):
         src = ROOT / 'assets' / name
         if src.exists():
