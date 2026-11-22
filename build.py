@@ -25,34 +25,36 @@ SECTIONS = [('mexico', 'México'), ('espana', 'España'), ('ia', 'Inteligencia a
 
 CSS = """
 :root{--bg:#fff;--fg:#111;--muted:#666;--accent:#0b57d0}
-@media (prefers-color-scheme:dark){:root{--bg:#0e0e0e;--fg:#f2f2f2;--muted:#9a9a9a;--accent:#8ab4ff}}
+@media (prefers-color-scheme:dark){:root{--bg:#0e0e0e;--fg:#f2f2f2;--muted:#a0a0a0;--accent:#8ab4ff}}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--bg);color:var(--fg);font:18px/1.55 Arial,Helvetica,sans-serif}
-main{max-width:40rem;margin:0 auto;padding:3rem 1rem 5rem}
+body{margin:0;background:var(--bg);color:var(--fg);font:18px/1.6 Arial,Helvetica,sans-serif}
+main{max-width:38rem;margin:0 auto;padding:2.5rem 1rem 5rem}
 a{color:var(--accent);text-underline-offset:.18em}
 a:hover{text-decoration-thickness:2px}
-h1{font-size:2.4rem;line-height:1.1;margin:0 0 .75rem;letter-spacing:-.02em}
-h2{font-size:1.25rem;line-height:1.3;margin:0 0 .25rem}
+.brand{font-weight:700;font-size:1rem;margin:0 0 3rem;letter-spacing:.01em}
+.brand a{color:var(--fg);text-decoration:none}
+h1{font-size:2.1rem;line-height:1.15;margin:0 0 1.5rem;letter-spacing:-.02em}
+h2{font-size:1.2rem;line-height:1.35;margin:0 0 .3rem}
 h2 a{color:var(--fg);text-decoration:none}
 h2 a:hover{text-decoration:underline}
-h3{font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:2.5rem 0 .75rem}
+h3{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:3rem 0 1rem}
 p{margin:0 0 1rem}
-.lead{font-size:1.15rem;color:var(--muted);margin-bottom:1.5rem}
 .muted{color:var(--muted);font-size:.9rem}
-.month{font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:3rem 0 1rem}
-.ep{margin:0 0 2rem}
-.ep p{color:var(--muted);margin:0 0 .6rem}
-.latest{margin:2.5rem 0 0}
-.latest h2{font-size:1.6rem}
-audio{width:100%;display:block;margin:.5rem 0 0}
-.story{margin:0 0 1.5rem}
-.story strong{display:block;font-weight:700}
-details{margin-top:2.5rem}
+.subscribe{margin:2rem 0 0;display:flex;flex-wrap:wrap;gap:.5rem 1.5rem}
+.ep{margin:0 0 2.5rem}
+.ep .teaser{color:var(--muted);margin:0 0 .5rem}
+.ep .meta{margin:.4rem 0 0}
+audio{width:100%;display:block;margin:.6rem 0 0}
+.story{margin:0 0 1.75rem}
+.story strong{display:block;font-weight:700;line-height:1.4;margin-bottom:.25rem}
+details{margin-top:3rem}
 summary{cursor:pointer;color:var(--accent)}
 .script{white-space:pre-wrap;color:var(--muted);font-size:.95rem;margin-top:1rem}
+.nav{display:flex;justify-content:space-between;gap:1rem;margin-top:3.5rem}
 footer{margin-top:4rem}
 a:focus-visible,summary:focus-visible,audio:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+@media (max-width:30rem){body{font-size:17px}h1{font-size:1.75rem}}
 """
 
 
@@ -96,6 +98,11 @@ def link(url: str, text: str) -> str:
     return f'<a href="{escape(safe_url(url), quote=True)}" rel="noopener">{escape(text)}</a>'
 
 
+def short_date(ep: dict) -> str:
+    d = ep['_date']
+    return f"{DAYS[d.weekday()].capitalize()} {d.day} de {MONTHS[d.month - 1]}"
+
+
 def page(cfg: dict, title: str, body: str, canonical: str, root: str, desc: str) -> str:
     feed = f'{root}feed.xml'
     return f"""<!doctype html>
@@ -107,14 +114,16 @@ def page(cfg: dict, title: str, body: str, canonical: str, root: str, desc: str)
 <meta name="description" content="{escape(desc, quote=True)}">
 <link rel="canonical" href="{escape(canonical, quote=True)}">
 <link rel="alternate" type="application/rss+xml" title="{escape(cfg['title'], quote=True)}" href="{escape(feed, quote=True)}">
-<link rel="icon" href="{root}cover.png">
+<link rel="icon" href="{root}icon.png">
 <meta property="og:title" content="{escape(title, quote=True)}">
 <meta property="og:description" content="{escape(desc, quote=True)}">
 <meta property="og:image" content="{escape(cfg['site_url'], quote=True)}/cover.png">
+<meta name="theme-color" content="#0e0e0e">
 <style>{CSS}</style>
 </head>
 <body>
 <main>
+<p class="brand"><a href="{root}">{escape(cfg['title'])}</a></p>
 {body}
 </main>
 </body>
@@ -129,44 +138,57 @@ def player(ep: dict) -> str:
     return f'<audio controls preload="none" src="{escape(audio["url"], quote=True)}"></audio>'
 
 
-def teaser(ep: dict) -> str:
+def teaser(ep: dict, limit: int = 120) -> str:
     stories = ep.get('stories') or []
-    return stories[0]['title'] if stories else ''
+    if not stories:
+        return ''
+    text = stories[0]['title']
+    if len(text) > limit:
+        text = text[:limit].rsplit(' ', 1)[0].rstrip(',;:|-') + '…'
+    return text
 
 
-def episode_row(ep: dict, root: str, latest: bool = False) -> str:
+def episode_row(ep: dict, root: str) -> str:
     url = f"{root}episodios/{ep['id']}/"
-    meta = ' '.join(x for x in [f"{len(ep.get('stories') or [])} noticias", minutes(ep)] if x)
-    cls = 'ep latest' if latest else 'ep'
-    return (f'<article class="{cls}"><h2><a href="{url}">{escape(long_date(ep))}</a></h2>'
-            f'<p>{escape(teaser(ep))}</p>{player(ep)}'
-            f'<p class="muted" style="margin:.5rem 0 0">{escape(meta)}</p></article>')
+    meta = ', '.join(x for x in [minutes(ep), f"{len(ep.get('stories') or [])} noticias"] if x)
+    return (f'<article class="ep"><h2><a href="{url}">{escape(short_date(ep))}</a></h2>'
+            f'<p class="teaser">{escape(teaser(ep))}</p>{player(ep)}'
+            f'<p class="muted meta">{escape(meta)}</p></article>')
 
 
 def build_index(cfg: dict, eps: list[dict], root: str) -> str:
-    parts = [f'<h1>{escape(cfg["title"])}</h1>', f'<p class="lead">{escape(cfg["description"])}</p>',
-             f'<p>{link(root + "feed.xml", "Suscríbete por RSS")} en tu app de podcasts.</p>']
+    feed = f'{root}feed.xml'
+    apple = 'podcast://' + cfg['site_url'].split('://', 1)[-1] + '/feed.xml'
+    parts = [
+        '<h1>Las noticias que importan, cada mañana en unos 18 minutos de audio.</h1>',
+        '<p>Cada día a las 8:00 (hora de Madrid) un sistema automático revisa los medios de México, España y el '
+        'mundo, elige las noticias más relevantes y las analiza. Una voz sintética narra el resultado: México, '
+        'España, inteligencia artificial, mundo y negocios, con el análisis de qué significa cada noticia.</p>',
+        '<p>Cada episodio tiene su propia página con las fuentes originales y el guion completo.</p>',
+        f'<p class="subscribe"><a href="{escape(apple, quote=True)}">Suscribirse en Apple Podcasts</a>'
+        f'<a href="{feed}">Feed RSS para cualquier app</a></p>',
+        '<h3>Episodios</h3>',
+    ]
     if not eps:
         parts.append('<p class="muted">El primer episodio llega mañana a las 8:00, hora de Madrid.</p>')
-    else:
-        parts.append(episode_row(eps[0], root, latest=True))
-        current = None
-        for ep in eps[1:]:
-            label = month_label(ep)
-            if label != current:
-                parts.append(f'<h3 class="month" style="margin-top:3rem">{escape(label)}</h3>')
-                current = label
-            parts.append(episode_row(ep, root))
+    current = None
+    for ep in eps:
+        label = month_label(ep)
+        if label != current:
+            if current is not None:
+                parts.append(f'<h3>{escape(label)}</h3>')
+            current = label
+        parts.append(episode_row(ep, root))
     parts.append(f'<footer class="muted">{escape(cfg["disclaimer"])}</footer>')
     return page(cfg, cfg['title'], '\n'.join(parts), f'{cfg["site_url"]}/', root, cfg['description'])
 
 
-def build_episode(cfg: dict, ep: dict, root: str) -> str:
-    title = f"{cfg['title']}, {long_date(ep)}"
+def build_episode(cfg: dict, ep: dict, root: str, newer: dict | None, older: dict | None) -> str:
+    title = f"{short_date(ep)} de {ep['_date'].year}, {cfg['title']}"
     stories = ep.get('stories') or []
-    parts = [f'<p><a href="{root}">Todos los episodios</a></p>', f'<h1>{escape(long_date(ep).capitalize())}</h1>']
+    parts = [f'<h1>{escape(long_date(ep).capitalize())}</h1>']
     if minutes(ep):
-        parts.append(f'<p class="muted">{escape(minutes(ep))}, {len(stories)} noticias</p>')
+        parts.append(f'<p class="muted">Dura {escape(minutes(ep))} y cubre {len(stories)} noticias.</p>')
     parts.append(player(ep))
     for key, label in SECTIONS:
         group = [s for s in stories if s.get('section') == key]
@@ -180,16 +202,20 @@ def build_episode(cfg: dict, ep: dict, root: str) -> str:
                          + (f'<br><span class="muted">Más fuentes:{extra}</span>' if extra else '') + '</div>')
     if ep.get('script'):
         parts.append(f'<details><summary>Leer el guion completo</summary><div class="script">{escape(ep["script"])}</div></details>')
+    nav = ''
+    nav += f'<a href="{root}episodios/{older["id"]}/">&larr; {escape(short_date(older))}</a>' if older else '<span></span>'
+    nav += f'<a href="{root}episodios/{newer["id"]}/">{escape(short_date(newer))} &rarr;</a>' if newer else '<span></span>'
+    parts.append(f'<nav class="nav">{nav}</nav>')
     parts.append(f'<footer class="muted">{escape(cfg["disclaimer"])}</footer>')
     return page(cfg, title, '\n'.join(parts), f'{cfg["site_url"]}/episodios/{ep["id"]}/', root, teaser(ep) or cfg['description'])
 
 
-def item_html(ep: dict) -> str:
+def item_html(ep: dict, page_url: str) -> str:
     out = []
     for s in ep.get('stories') or []:
-        out.append(f'<li><strong>{escape(s["title"])}</strong> {escape(s.get("so_what") or "")} '
-                   f'<a href="{escape(safe_url(s["url"]), quote=True)}">Fuente</a></li>')
-    return f'<ul>{"".join(out)}</ul>'
+        out.append(f'<li><a href="{escape(safe_url(s["url"]), quote=True)}">{escape(s["title"])}</a></li>')
+    return (f'<p>Las noticias de hoy:</p><ul>{"".join(out)}</ul>'
+            f'<p><a href="{escape(page_url, quote=True)}">Análisis completo y guion</a></p>')
 
 
 def cdata(text: str) -> str:
@@ -205,7 +231,7 @@ def build_feed(cfg: dict, eps: list[dict]) -> str:
             continue
         published = datetime.fromisoformat(ep['published_at']) if ep.get('published_at') else \
             ep['_date'].replace(hour=7, tzinfo=timezone.utc)
-        title = f"{cfg['title']}, {long_date(ep)}"
+        title = long_date(ep).capitalize()
         link_url = f'{site}/episodios/{ep["id"]}/'
         duration = f'<itunes:duration>{int(audio["seconds"])}</itunes:duration>' if audio.get('seconds') else ''
         items.append(f"""    <item>
@@ -213,7 +239,7 @@ def build_feed(cfg: dict, eps: list[dict]) -> str:
       <link>{escape(link_url)}</link>
       <guid isPermaLink="false">briefing-{escape(ep['id'])}</guid>
       <pubDate>{format_datetime(published)}</pubDate>
-      <description>{cdata(item_html(ep))}</description>
+      <description>{cdata(item_html(ep, link_url))}</description>
       <enclosure url="{escape(audio['url'], quote=True)}" length="{int(audio.get('bytes') or 0)}" type="{escape(audio.get('type') or 'audio/mpeg')}"/>
       {duration}
       <itunes:episodeType>full</itunes:episodeType>
@@ -258,12 +284,14 @@ def main() -> int:
     out.mkdir(parents=True)
     # Relative root so the pages also work under a project path like /repo/.
     (out / 'index.html').write_text(build_index(cfg, eps, './'), encoding='utf-8')
-    for ep in eps:
+    for i, ep in enumerate(eps):
         folder = out / 'episodios' / ep['id']
         folder.mkdir(parents=True)
-        (folder / 'index.html').write_text(build_episode(cfg, ep, '../../'), encoding='utf-8')
+        newer = eps[i - 1] if i > 0 else None
+        older = eps[i + 1] if i + 1 < len(eps) else None
+        (folder / 'index.html').write_text(build_episode(cfg, ep, '../../', newer, older), encoding='utf-8')
     (out / 'feed.xml').write_text(build_feed(cfg, eps), encoding='utf-8')
-    for name in ('cover.png',):
+    for name in ('cover.png', 'icon.png'):
         src = ROOT / 'assets' / name
         if src.exists():
             shutil.copy(src, out / name)
